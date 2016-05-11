@@ -1,0 +1,46 @@
+$(document).ready(function(){
+		alert("I am ready");
+
+		$("#tasks").submit(function(){
+			event.preventDefault();
+
+			console.log("Update button clicked");
+
+			var pw_date = $("#pwdate").val();
+			var pw_task = $("#pwtask").val();
+			var start_time = $("#st_time").val();
+			var end_time = $("#ed_time").val();
+			
+
+			if(pw_date == ''){$('#pwdate').addClass('error');}else{$('#pwdate').removeClass('error');}
+			if(pw_task == ''){$('#pwtask').addClass('error');}else{$('#pwtask').removeClass('error');}
+			if(start_time == ''){$('#st_time').addClass('error'); }else{$('#st_time').removeClass('error');}
+			if(end_time == ''){$('#ed_time').addClass('error');}else{$('#ed_time').removeClass('error');}
+
+			if(pw_date != "" && pw_task!="" && start_time!="" && end_time!=""){
+				console.log("all feilds are valid");
+				 $.ajax({
+		           url:'<?php echo base_url("index.php/employee/save_record")?>',
+		           type: 'POST',
+		           data: $("#tasks").serialize(),
+		           success: function(reply){
+		           	alert(reply);
+		               if(reply == 'success'){
+		                  $('.err').html('<div class="alert alert-success alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><strong>Success!</strong> Task Added sucessfully for '+pw_date+'.</div>');
+		                  $("#pwdate").val('');
+		                  $("#pwdate").val('');
+		                  $("#st_time").val('');
+		                  $("#ed_time").val('');
+		                  
+		               }else{
+		                  $('.err').html('<div class="alert alert-danger alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><strong>Alert!</strong> Task already added for '+pw_date+'.</div>');
+		               }  
+		           },
+		           error: function(){
+		                $('.err').html('<div class="alert alert-danger alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><strong>Opps!</strong> Something went wrong. Please try again later.</div>');
+		           }
+		       });
+			}
+
+		})
+	})
